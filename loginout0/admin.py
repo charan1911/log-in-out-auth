@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Userr
+from .models import car
 
 # Register your models here.
 
-admin.site.register(Userr)
+admin.site.register(car)

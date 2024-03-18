@@ -43,12 +43,13 @@
 </div>
 
 {% block content %}
-<p>{{ user.username }}done</p>
+welcome,host<br>
+{{ user.username }},logged successfully
 <form method="POST" action="{% url 'user_logout' %}">
     {% csrf_token %}
     <input type="submit" value="Logout">
 </form>
 {% endblock %}
-iam HOST
+
 </body>
 </html>

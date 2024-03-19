@@ -1,7 +1,7 @@
 from django.contrib import admin
+from .models import Product
 
-from .models import car
-
-# Register your models here.
-
-admin.site.register(car)
+@admin.register(Product)
+class Product(admin.ModelAdmin):
+    list_display = ['name', 'description', 'price']
+    search_fields = ['name', 'description']

@@ -49,7 +49,31 @@ welcome,host<br>
     {% csrf_token %}
     <input type="submit" value="Logout">
 </form>
+
+
+
+<h2>All Products</h2>
+
+<ul>
+    {% for product in products %}
+    <li>
+        <strong>Name:</strong> {{ product.name }}<br>
+        <img src="{{ product.picture.url }}" alt="{{ product.name }}" width="100"><br>
+        <strong>Description:</strong> {{ product.description }}<br>
+        <strong>Price:</strong> ${{ product.price }}<br>
+        <a href="{% url 'product_detail' product.pk %}">Detail</a> |
+        <a href="{% url 'product_update' product.pk %}">Update</a> |
+        <a href="{% url 'product_confirm_delete' product.pk %}">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock %}
+
+
+<div class="sticky-button">
+<a href="{% url 'product_create' %}" style="text-decoration: none;">Add Product</a>
+</div>
+
 
 </body>
 </html>

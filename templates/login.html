@@ -58,20 +58,23 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="login-container">
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Login</button>
-        <p>{{error}}</p>
-    </form>
-</div>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required autocomplete="new-username">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required autocomplete="off">
+            <button type="submit">Login</button>
+            <p>{{error}}</p>
+        </form>
+    </div>
+    
+    </body>
+    
 
-</body>
 </html>

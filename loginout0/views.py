@@ -1,17 +1,100 @@
-from django.shortcuts import render , redirect
-
-from django.http import HttpResponse,HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-
-from .models import car
-from django.contrib.auth import authenticate ,login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
 from django.urls import reverse
+from .models import Product
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Product
+from django.http import HttpResponseBadRequest
+
+@login_required(login_url='/login/')
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'product_list.html', {'products': products})
 
 
 
-# Create your views here.
+@login_required(login_url='/login/')
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'product_detail.html', {'product': product})
+
+
+
+@login_required(login_url='/login/')
+def product_create(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        if not name or not description or not price:
+            return HttpResponseBadRequest("Please provide all required fields.")
+        
+        picture = request.FILES.get('picture')
+        if not picture:
+            return HttpResponseBadRequest("Please provide a picture.")
+
+        Product.objects.create(name=name, description=description, price=price, picture=picture)
+        return redirect('user_success_g')
+    return render(request, 'product_form.html')
+
+
+
+
+@login_required(login_url='/login/')
+def product_update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        if not name or not description or not price:
+            return HttpResponseBadRequest("Please provide all required fields.")
+        
+        picture = request.FILES.get('picture')
+        if not picture:
+            return HttpResponseBadRequest("Please provide a picture.")
+
+        product.name = name
+        product.description = description
+        product.price = price
+        product.picture = picture
+        product.save()
+        return redirect('user_success_g')
+    return render(request, 'product_form.html', {'product': product})
+
+
+
+@login_required(login_url='/login/')
+def product_confirm_delete(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('user_success_g')
+    return render(request, 'product_confirm_delete.html', {'product': product})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def basee(request):
     return render(request,"basee.html")
 
@@ -79,17 +162,30 @@ def signin(request):
     return render(request, 'signin.html')
 
 
-@login_required(login_url='/login/')
-def success_g(request):
+"""@login_required(login_url='/login/')
+def success_c(request):
     context = {}
     context['user'] = request.user
-    return render (request , 'success_g.html', context)
+    return render (request , 'success_c.html', context)
+"""
+
 
 @login_required(login_url='/login/')
 def success_c(request):
     context = {}
     context['user'] = request.user
-    return render (request , 'success_c.html', context)
+    products = Product.objects.all()
+    context['products'] = products
+    return render(request, 'success_c.html', context)
+
+
+@login_required(login_url='/login/')
+def success_g(request):
+    context = {}
+    context['user'] = request.user
+    products = Product.objects.all()
+    context['products'] = products
+    return render(request, 'success_g.html', context)
 
 
 def user_logout(request):

@@ -69,12 +69,12 @@ def product_update(request, pk):
 
 
 @login_required(login_url='/login/')
-def product_confirm_delete(request, pk):
+def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
         product.delete()
         return redirect('user_success_g')
-    return render(request, 'product_confirm_delete.html', {'product': product})
+    return render(request, 'product_delete.html', {'product': product})
 
 
 
@@ -192,10 +192,15 @@ def user_logout(request):
     if request.method == "POST":
         logout(request)
         return HttpResponseRedirect(reverse('basee'))
-    
 
+from django.shortcuts import redirect
 
-
+def user_go_back(request):
+    username = request.user.username  # Assuming user is authenticated
+    if username == 'gummma':
+        return redirect('user_success_g')  # Redirect to 'user_success_g' for username 'gummma'
+    else:
+        return redirect('user_success_c')  # Redirect to 'user_success_c' for other usernames
 
 
 
@@ -207,7 +212,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if username == 'gummaaa':
+            if username == 'gummma':
                 return redirect(reverse('user_success_g'))
             else:
                 return redirect(reverse('user_success_c'))

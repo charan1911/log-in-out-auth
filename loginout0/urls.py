@@ -23,8 +23,10 @@ from .views import  product_detail
 from .views import product_update
 #from .views import product_delete
 from .views import product_create
-from .views import product_confirm_delete
+from .views import product_delete
 from .views import product_list
+from django.urls import path
+from .views import user_go_back
 
 urlpatterns = [
     path('',basee,name='basee'),
@@ -38,8 +40,11 @@ urlpatterns = [
     path('product/<int:pk>/update/', product_update, name='product_update'),  # Define the URL pattern for product_update view
     #path('product/<int:pk>/delete/', product_delete, name='product_delete'),  # Define the URL pattern for product_delete view
     path('product/create/', product_create, name='product_create'),  # Define the URL pattern for product_create view
-    path('product/<int:pk>/delete/', product_confirm_delete, name='product_confirm_delete'),
+    path('product/<int:pk>/delete/', product_delete, name='product_delete'),
     path('product/list/', product_list, name='product_list'),
-
+    path('go-back/', user_go_back, name='go_back'),
 
 ]
+
+
+

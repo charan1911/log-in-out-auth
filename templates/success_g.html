@@ -63,7 +63,7 @@ welcome,host<br>
         <strong>Price:</strong> ${{ product.price }}<br>
         <a href="{% url 'product_detail' product.pk %}">Detail</a> |
         <a href="{% url 'product_update' product.pk %}">Update</a> |
-        <a href="{% url 'product_confirm_delete' product.pk %}">Delete</a>
+        <a href="{% url 'product_delete' product.pk %}">Delete</a>
     </li>
     {% endfor %}
 </ul>

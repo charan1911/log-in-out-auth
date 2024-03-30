@@ -10,6 +10,143 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product
 from django.http import HttpResponseBadRequest
 
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .models import LikedProduct
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import LikedProduct
+
+@login_required
+def liked_products(request):
+    # Get the default username (current logged-in user's username)
+    default_username = request.user.username
+    
+    # Retrieve liked products associated with the user
+    liked_products = LikedProduct.objects.filter(user=request.user)
+    
+    # Pass the liked products and default username to the template
+    return render(request, 'liked_products.html', {'liked_products': liked_products, 'default_username': default_username})
+
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import LikedProduct, Product
+#from .views import liked_product
+@login_required
+def like_this_product(request, product_id):
+    # Get the user object corresponding to the logged-in user
+    user = request.user
+    
+    # Retrieve the product object using product_id
+    product = get_object_or_404(Product, pk=product_id)
+    
+    # Check if the product is already liked by the user
+    liked_product, created = LikedProduct.objects.get_or_create(user=user, product=product)
+    
+    # Redirect to the success page if the product is liked successfully
+    if created:
+        return redirect('user_success_c')
+    else:
+        # If the product is already liked, you can redirect to some other page or render a message
+        return redirect('user_success_c')
+
+"""@login_required
+def like_this_product(request):
+    # Get the default username (current logged-in user's username)
+    default_username = request.user.username
+    
+    # Get the user object corresponding to the default username
+    user = User.objects.filter(username=default_username).first()
+    
+    if user:
+        # Retrieve liked products associated with the user
+        liked_products = LikedProduct.objects.filter(user=user)
+        
+        # Pass the liked products and default username to the template
+        return render(request, 'liked_products.html', {'liked_products': liked_products, 'default_username': default_username})
+    else:
+        # Render an error page if the user is not found
+        return render(request, 'error.html', {'message': 'User not found'})
+
+
+"""
+
+
+
+
+
+
+
+
+
+
+# views.py
+
+from django.shortcuts import redirect, get_object_or_404
+from .models import Bookings
+
+def book_product(request, product_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        # Get the product based on the provided ID
+        product = get_object_or_404(Product, pk=product_id)
+        
+        # Retrieve form data
+        product_name = request.POST.get('product_name')
+        price = request.POST.get('price')
+        
+        # Create a booking instance using the product details and the logged-in user
+        booking = Bookings.objects.create(
+            user=request.user,
+            product_name=product_name,
+            price=price
+        )
+
+        # Add more fields to the booking object as needed
+
+        return redirect('success_c')  # Redirect to product detail page after booking
+    else:
+        return redirect('user_login')  # Redirect to login page if user is not authenticated
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @login_required(login_url='/login/')
 def product_list(request):
     products = Product.objects.all()
@@ -170,13 +307,23 @@ def success_c(request):
 """
 
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Product, LikedProduct
+
 @login_required(login_url='/login/')
 def success_c(request):
     context = {}
     context['user'] = request.user
     products = Product.objects.all()
     context['products'] = products
+    
+    # Get the liked products associated with the current user
+    liked_products = LikedProduct.objects.filter(user=request.user)
+    context['liked_products'] = liked_products
+    
     return render(request, 'success_c.html', context)
+
 
 
 @login_required(login_url='/login/')

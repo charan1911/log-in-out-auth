@@ -43,14 +43,19 @@
         <h1>Product Detail</h1>
         <div class="product-info">
             <img src="{{ product.picture.url }}" alt="{{ product.name }}">
-            <p><strong>Namme:</strong> {{ product.name }}</p>
+            <p><strong>Name:</strong> {{ product.name }}</p>
             <p><strong>Description:</strong> {{ product.description }}</p>
             <p><strong>Price:</strong> ${{ product.price }}</p>
         </div>
+        <form method="post" action="{% url 'book_product' product.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input type="hidden" name="product_name" value="{{ product.name }}">
+            <input type="hidden" name="price" value="{{ product.price }}">
+            <button type="submit" class="btn btn-primary">Book</button>
+        </form>
+        
         <a href="{% url 'go_back' %}" class="btn btn-primary">Back</a>
-
     </div>
 </body>
-
-
 </html>

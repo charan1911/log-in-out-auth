@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,22 +12,27 @@
         }
         .menu-bar {
             background-color: #333;
+            display: flex;
+            justify-content: space-between; /* Align items at both ends */
+            padding: 10px;
         }
         .menu-bar ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            display: flex;
         }
         .menu-bar li {
-            display: inline;
+            margin-right: 20px;
         }
         .menu-bar a {
-            display: inline-block;
             color: white;
-            text-align: center;
-            padding: 14px 16px;
             text-decoration: none;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
         }
     </style>
 </head>
@@ -36,38 +42,48 @@
             <li><a href="#" style="text-decoration: none;">Home</a></li>
             <li><a href="#" style="text-decoration: none;">Search</a></li>
             <li><a href="#" style="text-decoration: none;">About Us</a></li>
-            <li><a href="#" style="text-decoration: none;">Signin</a></li>
-            <li><a href="#" style="text-decoration: none;">Login</a></li>
         </ul>
+        <ul>
+            <li>
+                <form method="POST" action="{% url 'user_logout' %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Logout">
+                </form>
+                
+        </ul>
+        
     </div>
 
     <div class="content">
-        
-        <h2>Welcome, {{ user.username }}</h2>
-        <p>You have logged in successfully.</p>
-        <form method="POST" action="{% url 'user_logout' %}">
-            {% csrf_token %}
-            <input type="submit" value="Logout">
-        </form>
+        <div>
+            <h2>Welcome, {{ user.username }}</h2>
+            <p>You have logged in successfully.</p> 
+        </div>
+        <div>
+            <a href="{% url 'liked_products' %}" class="btn btn-primary">
+                <img src="{% static 'heartr.jpg' %}" alt="Heart" height="40px">
+            </a>
+        </div>
     </div>
-        <hr>
-        <ul>
-            {% for product in products %}
+
+    <hr>
+
+    <ul>
+        {% for product in products %}
             <li>
                 <strong>Name:</strong> {{ product.name }}<br>
                 <img src="{{ product.picture.url }}" alt="{{ product.name }}" width="100"><br>
                 <strong>Description:</strong> {{ product.description }}<br>
                 <strong>Price:</strong> ${{ product.price }}<br>
-                <a href="{% url 'product_detail' product.pk %}">Detail</a>
-                <!--
-                     |<a href="{% url 'product_detail' product.pk %}">Detail</a>
-                <a href="{% url 'product_update' product.pk %}">Update</a> |
-                <a href="{% url 'product_delete' product.pk %}">Delete</a>
-                -->
+                <a href="{% url 'product_detail' product.pk %}">Detail</a> |
+                <a href="{% url 'like_this_product' product.pk %}">Like</a> |
+                {% for liked_product in liked_products %}
+                    {% if liked_product.product == product %}
+                        <img src="https://static-00.iconduck.com/assets.00/tick-circle-icon-512x511-tdqse5ra.png" height="16px" >
+                    {% endif %}
+                {% endfor %}
             </li>
-            {% endfor %}
-        </ul>
-
+        {% endfor %}
+    </ul>
 </body>
-
 </html>

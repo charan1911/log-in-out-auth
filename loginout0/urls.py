@@ -27,6 +27,10 @@ from .views import product_delete
 from .views import product_list
 from django.urls import path
 from .views import user_go_back
+from .views import book_product
+from .views import like_this_product
+from .views import liked_products
+
 
 urlpatterns = [
     path('',basee,name='basee'),
@@ -43,6 +47,10 @@ urlpatterns = [
     path('product/<int:pk>/delete/', product_delete, name='product_delete'),
     path('product/list/', product_list, name='product_list'),
     path('go-back/', user_go_back, name='go_back'),
+    path('success/', success_c, name='success_c'),
+    path('book_product/<int:product_id>/', book_product, name='book_product'),
+    path('like_this_product/<int:product_id>/', like_this_product, name='like_this_product'),
+    path('liked_products/', liked_products, name='liked_products'),
 
 ]
 
